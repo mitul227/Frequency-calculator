@@ -1,12 +1,13 @@
 #include<stdio.h>
-struct s
+struct s           //an array of structure is defined to store each word of the file
 {
     char a[20];
+    int count;
 }s[100000];
 void main()
 {
     FILE *f=NULL;
-    int c=0,i=0,j=0,d[100000]={0},max,k,l;
+    int i=0,j=0,k,l,max;
     char ch,b[20];
     f=fopen("xyz.txt","r");
     if(f==NULL)
@@ -18,49 +19,50 @@ void main()
     {
         while(fscanf(f,"%s",b)!=EOF)
         {
+            l=strlen(b);
+            for(j=0;j<l;j++)
+            b[j]=tolower(b[j]);
             strcpy(s[i].a,b);
             i++;
         }
     }
     for(j=0;j<i;j++)
     {
-        c=1;
         if(strcmp(s[j].a,"\0")!=0)
         {
+            s[j].count=1;
             for(k=j+1;k<i;k++)
             {
                 if(strcmp(s[j].a,s[k].a)==0)
                 {
                     strcpy(s[k].a,"\0");
-                    c++;
+                    s[j].count++;
                 }
             }
-            d[j]=c;
         }
     }
-    c=0;
-    for(k=0;k<j;k++)
+    for(k=0;k<i;k++)
     {
-        if(d[k]>0)
-        c++;
-    }
-    for(k=0;k<c;k++)
-    {
-        for(l=0;l<j;l++)
+        if(strcmp(s[k].a,"\0")!=0)
         {
-            if(d[l]!=0)
+            for(l=0;l<i;l++)
             {
-                max=l;
-                break;
+                if(s[l].count!=0)
+                {
+                    max=l;
+                    break;
+                }
             }
+            for(j=0;j<i;j++)
+            {
+                if(s[j].count>s[max].count)
+                max=j;
+            }
+            printf("%20s\t-\t%d\n",s[max].a,s[max].count);
+            s[max].count=0;
         }
-        for(l=0;l<j;l++)
-        {
-            if(d[l]>d[max])
-            max=l;
-        }
-        printf("%s\t-\t%d\n",s[max].a,d[max]);
-        d[max]=0;
     }
 }
+
+
 
