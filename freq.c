@@ -72,6 +72,8 @@ void main()
             words[max].count=0;
         }
     }
+    fclose(f);
+    fclose(f2);
 }
 
 
